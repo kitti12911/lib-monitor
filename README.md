@@ -52,14 +52,14 @@ defer profiling.Shutdown(profiler)
 
 options:
 
-| function                    | description                                |
-|-----------------------------|--------------------------------------------|
-| `WithNamespace(namespace)`  | add namespace tag to profiling data        |
-| `WithTags(tags)`            | add or override custom profiling tags      |
-| `WithProfileTypes(types...)`| choose which pyroscope profiles to collect |
-| `WithLogger(logger)`        | set pyroscope client logger                |
-| `WithBasicAuth(user, pass)` | set basic auth for pyroscope               |
-| `WithTenantID(tenantID)`    | set pyroscope tenant id                    |
+| function                     | description                                |
+| ---------------------------- | ------------------------------------------ |
+| `WithNamespace(namespace)`   | add namespace tag to profiling data        |
+| `WithTags(tags)`             | add or override custom profiling tags      |
+| `WithProfileTypes(types...)` | choose which pyroscope profiles to collect |
+| `WithLogger(logger)`         | set pyroscope client logger                |
+| `WithBasicAuth(user, pass)`  | set basic auth for pyroscope               |
+| `WithTenantID(tenantID)`     | set pyroscope tenant id                    |
 
 ## requirements
 
