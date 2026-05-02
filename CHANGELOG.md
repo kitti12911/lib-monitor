@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/kitti12911/lib-monitor/compare/v1.2.0...v1.3.0) (2026-05-02)
+
+
+### Features
+
+* add 'NewFromConfig' for built-in config ([434519c](https://github.com/kitti12911/lib-monitor/commit/434519c17914e4990c6f1994016487a5f8b55182))
+
 ## [1.2.0](https://github.com/kitti12911/lib-monitor/compare/v1.1.0...v1.2.0) (2026-05-02)
 
 
