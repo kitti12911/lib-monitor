@@ -10,6 +10,15 @@ import (
 
 type Option func(*pyroscope.Config)
 
+type Config struct {
+	Enabled           bool   `mapstructure:"enabled"             env:"PROFILING_ENABLED"`
+	ServerAddress     string `mapstructure:"server_address"      env:"PROFILING_SERVER_ADDRESS"      validate:"required_if=Enabled true,omitempty,url"`
+	Namespace         string `mapstructure:"namespace"           env:"PROFILING_NAMESPACE"`
+	BasicAuthUser     string `mapstructure:"basic_auth_user"     env:"PROFILING_BASIC_AUTH_USER"     validate:"required_with=BasicAuthPassword"`
+	BasicAuthPassword string `mapstructure:"basic_auth_password" env:"PROFILING_BASIC_AUTH_PASSWORD" validate:"required_with=BasicAuthUser"`
+	TenantID          string `mapstructure:"tenant_id"           env:"PROFILING_TENANT_ID"`
+}
+
 func New(serviceName, serverAddress string, opts ...Option) (*pyroscope.Profiler, error) {
 	cfg := pyroscope.Config{
 		ApplicationName: serviceName,
@@ -38,6 +47,26 @@ func New(serviceName, serverAddress string, opts ...Option) (*pyroscope.Profiler
 	}
 
 	return profiler, nil
+}
+
+func NewFromConfig(serviceName string, cfg Config, opts ...Option) (*pyroscope.Profiler, error) {
+	if !cfg.Enabled {
+		return nil, nil
+	}
+
+	if cfg.Namespace != "" {
+		opts = append(opts, WithNamespace(cfg.Namespace))
+	}
+
+	if cfg.BasicAuthUser != "" {
+		opts = append(opts, WithBasicAuth(cfg.BasicAuthUser, cfg.BasicAuthPassword))
+	}
+
+	if cfg.TenantID != "" {
+		opts = append(opts, WithTenantID(cfg.TenantID))
+	}
+
+	return New(serviceName, cfg.ServerAddress, opts...)
 }
 
 func Shutdown(profiler *pyroscope.Profiler) error {

@@ -17,7 +17,11 @@ opentelemetry tracing setup with OTLP gRPC exporter.
 ```go
 import "github.com/kitti12911/lib-monitor/tracing"
 
-tp, err := tracing.New(ctx, "my-service", "localhost:4317")
+tp, err := tracing.NewFromConfig(ctx, "my-service", tracing.Config{
+    Enabled:  true,
+    Endpoint: "localhost:4317",
+    Insecure: true,
+})
 if err != nil {
     log.Fatal(err)
 }
@@ -35,11 +39,11 @@ continuous profiling setup with Pyroscope.
 ```go
 import "github.com/kitti12911/lib-monitor/profiling"
 
-profiler, err := profiling.New(
-    "my-service",
-    "http://pyroscope.observability.svc.cluster.local:4040",
-    profiling.WithNamespace("demo"),
-)
+profiler, err := profiling.NewFromConfig("my-service", profiling.Config{
+    Enabled:       true,
+    ServerAddress: "http://pyroscope.observability.svc.cluster.local:4040",
+    Namespace:     "demo",
+})
 if err != nil {
     log.Fatal(err)
 }

@@ -12,10 +12,37 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.40.0"
 )
 
+type Config struct {
+	Enabled     bool    `mapstructure:"enabled"      env:"TRACING_ENABLED"`
+	Endpoint    string  `mapstructure:"endpoint"     env:"TRACING_ENDPOINT"     validate:"required_if=Enabled true,omitempty,hostname_port"`
+	Protocol    string  `mapstructure:"protocol"     env:"TRACING_PROTOCOL"     validate:"omitempty,oneof=grpc http"`
+	Insecure    bool    `mapstructure:"insecure"     env:"TRACING_INSECURE"`
+	SampleRatio float64 `mapstructure:"sample_ratio" env:"TRACING_SAMPLE_RATIO" validate:"omitempty,gte=0,lte=1"`
+}
+
 func New(ctx context.Context, serviceName, collectorEndpoint string) (*sdktrace.TracerProvider, error) {
+	return NewFromConfig(ctx, serviceName, Config{
+		Enabled:  true,
+		Endpoint: collectorEndpoint,
+		Insecure: true,
+	})
+}
+
+func NewFromConfig(ctx context.Context, serviceName string, cfg Config) (*sdktrace.TracerProvider, error) {
+	if !cfg.Enabled {
+		return nil, nil
+	}
+
+	exporterOpts := []otlptracegrpc.Option{
+		otlptracegrpc.WithEndpoint(cfg.Endpoint),
+	}
+
+	if cfg.Insecure {
+		exporterOpts = append(exporterOpts, otlptracegrpc.WithInsecure())
+	}
+
 	exporter, err := otlptracegrpc.New(ctx,
-		otlptracegrpc.WithEndpoint(collectorEndpoint),
-		otlptracegrpc.WithInsecure(),
+		exporterOpts...,
 	)
 
 	if err != nil {
@@ -34,10 +61,13 @@ func New(ctx context.Context, serviceName, collectorEndpoint string) (*sdktrace.
 		return nil, fmt.Errorf("tracing: create resource: %w", err)
 	}
 
-	tp := sdktrace.NewTracerProvider(
+	tracerProviderOpts := []sdktrace.TracerProviderOption{
 		sdktrace.WithBatcher(exporter),
 		sdktrace.WithResource(res),
-	)
+		sdktrace.WithSampler(sdktrace.ParentBased(sdktrace.TraceIDRatioBased(cfg.SampleRatio))),
+	}
+
+	tp := sdktrace.NewTracerProvider(tracerProviderOpts...)
 
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(
