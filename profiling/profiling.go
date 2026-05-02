@@ -2,6 +2,7 @@ package profiling
 
 import (
 	"fmt"
+	"log/slog"
 	"maps"
 
 	"github.com/grafana/pyroscope-go"
@@ -13,7 +14,7 @@ func New(serviceName, serverAddress string, opts ...Option) (*pyroscope.Profiler
 	cfg := pyroscope.Config{
 		ApplicationName: serviceName,
 		ServerAddress:   serverAddress,
-		Logger:          pyroscope.StandardLogger,
+		Logger:          slogLogger{},
 		Tags: map[string]string{
 			"service_name": serviceName,
 		},
@@ -90,4 +91,18 @@ func WithTenantID(tenantID string) Option {
 	return func(cfg *pyroscope.Config) {
 		cfg.TenantID = tenantID
 	}
+}
+
+type slogLogger struct{}
+
+func (slogLogger) Infof(format string, args ...any) {
+	slog.Info(fmt.Sprintf(format, args...))
+}
+
+func (slogLogger) Debugf(format string, args ...any) {
+	slog.Debug(fmt.Sprintf(format, args...))
+}
+
+func (slogLogger) Errorf(format string, args ...any) {
+	slog.Error(fmt.Sprintf(format, args...))
 }
