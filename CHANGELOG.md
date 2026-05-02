@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/kitti12911/lib-monitor/compare/v1.1.0...v1.2.0) (2026-05-02)
+
+
+### Features
+
+* bind logging to slog ([d5987b0](https://github.com/kitti12911/lib-monitor/commit/d5987b05a339f8fcc2ec4393347be07af5788c01))
+
 ## [1.1.0](https://github.com/kitti12911/lib-monitor/compare/v1.0.0...v1.1.0) (2026-05-01)
 
 
