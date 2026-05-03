@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/kitti12911/lib-monitor/compare/v1.4.0...v1.5.0) (2026-05-03)
+
+
+### Features
+
+* add test coverage ([5d1896d](https://github.com/kitti12911/lib-monitor/commit/5d1896db3a58d04e680b60dbadbd563a56c931f9))
+
 ## [1.4.0](https://github.com/kitti12911/lib-monitor/compare/v1.3.0...v1.4.0) (2026-05-03)
 
 
