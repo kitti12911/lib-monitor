@@ -6,10 +6,16 @@ import (
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.40.0"
+)
+
+const (
+	ProtocolGRPC = "grpc"
+	ProtocolHTTP = "http"
 )
 
 type Config struct {
@@ -33,20 +39,9 @@ func NewFromConfig(ctx context.Context, serviceName string, cfg Config) (*sdktra
 		return nil, nil
 	}
 
-	exporterOpts := []otlptracegrpc.Option{
-		otlptracegrpc.WithEndpoint(cfg.Endpoint),
-	}
-
-	if cfg.Insecure {
-		exporterOpts = append(exporterOpts, otlptracegrpc.WithInsecure())
-	}
-
-	exporter, err := otlptracegrpc.New(ctx,
-		exporterOpts...,
-	)
-
+	exporter, err := newExporter(ctx, cfg)
 	if err != nil {
-		return nil, fmt.Errorf("tracing: create exporter: %w", err)
+		return nil, err
 	}
 
 	res, err := resource.Merge(
@@ -76,6 +71,55 @@ func NewFromConfig(ctx context.Context, serviceName string, cfg Config) (*sdktra
 	))
 
 	return tp, nil
+}
+
+func newExporter(ctx context.Context, cfg Config) (sdktrace.SpanExporter, error) {
+	switch cfg.Protocol {
+	case "", ProtocolGRPC:
+		return newGRPCExporter(ctx, cfg)
+	case ProtocolHTTP:
+		return newHTTPExporter(ctx, cfg)
+	default:
+		return nil, fmt.Errorf("tracing: unsupported protocol %q", cfg.Protocol)
+	}
+}
+
+func newGRPCExporter(ctx context.Context, cfg Config) (sdktrace.SpanExporter, error) {
+	exporterOpts := []otlptracegrpc.Option{
+		otlptracegrpc.WithEndpoint(cfg.Endpoint),
+	}
+
+	if cfg.Insecure {
+		exporterOpts = append(exporterOpts, otlptracegrpc.WithInsecure())
+	}
+
+	exporter, err := otlptracegrpc.New(ctx,
+		exporterOpts...,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("tracing: create exporter: %w", err)
+	}
+
+	return exporter, nil
+}
+
+func newHTTPExporter(ctx context.Context, cfg Config) (sdktrace.SpanExporter, error) {
+	exporterOpts := []otlptracehttp.Option{
+		otlptracehttp.WithEndpoint(cfg.Endpoint),
+	}
+
+	if cfg.Insecure {
+		exporterOpts = append(exporterOpts, otlptracehttp.WithInsecure())
+	}
+
+	exporter, err := otlptracehttp.New(ctx,
+		exporterOpts...,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("tracing: create exporter: %w", err)
+	}
+
+	return exporter, nil
 }
 
 func Shutdown(ctx context.Context, tp *sdktrace.TracerProvider) error {

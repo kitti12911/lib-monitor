@@ -12,7 +12,7 @@ go get github.com/kitti12911/lib-monitor
 
 ### tracing
 
-opentelemetry tracing setup with OTLP gRPC exporter.
+opentelemetry tracing setup with OTLP gRPC or HTTP exporter.
 
 ```go
 import "github.com/kitti12911/lib-monitor/tracing"
@@ -20,6 +20,7 @@ import "github.com/kitti12911/lib-monitor/tracing"
 tp, err := tracing.NewFromConfig(ctx, "my-service", tracing.Config{
     Enabled:  true,
     Endpoint: "localhost:4317",
+    Protocol: "grpc",
     Insecure: true,
 })
 if err != nil {
@@ -28,7 +29,9 @@ if err != nil {
 defer tracing.Shutdown(ctx, tp)
 ```
 
-- exports traces via OTLP gRPC (e.g. to alloy, otel collector)
+- exports traces via OTLP gRPC or HTTP (e.g. to alloy, otel collector)
+- defaults to OTLP gRPC when `Protocol` is empty
+- use `Endpoint: "localhost:4318"` and `Protocol: "http"` for OTLP HTTP
 - sets global tracer provider
 - supports TraceContext and Baggage propagation
 
