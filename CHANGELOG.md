@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.4.0](https://github.com/kitti12911/lib-monitor/compare/v1.3.0...v1.4.0) (2026-05-03)
+
+
+### Features
+
+* add tracing by http ([22c1bfc](https://github.com/kitti12911/lib-monitor/commit/22c1bfc169d63e073a1d58cef2f5487ed3bc1e5c))
+
+
+### Bug Fixes
+
+* fix CGO_ENABLE -&gt; CGO_ENABLED ([475827f](https://github.com/kitti12911/lib-monitor/commit/475827fd9d7578f7d1619994a394511135d550e4))
+
 ## [1.3.0](https://github.com/kitti12911/lib-monitor/compare/v1.2.0...v1.3.0) (2026-05-02)
 
 
