@@ -108,11 +108,17 @@ options:
 
 - go 1.26 or higher
 
+Optional:
+
+- [prettier](https://prettier.io/) for Markdown, YAML, JSON, and JSONC formatting
+
 ## available commands
 
 ```bash
 make tidy
 make fmt
+make pretty
+make format
 make test
 make cov
 ```
