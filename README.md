@@ -1,6 +1,18 @@
 # lib-monitor
 
-observability helpers for homelab Go services. provides OpenTelemetry tracing setup and continuous profiling with Pyroscope.
+observability helpers for homelab Go services. provides OpenTelemetry tracing
+setup and continuous profiling with Pyroscope.
+
+## project structure
+
+```bash
+lib-monitor/
+├── profiling/    # Pyroscope continuous profiling setup
+├── tracing/      # OpenTelemetry tracing setup
+├── Makefile
+├── go.mod
+└── README.md
+```
 
 ## install
 
@@ -75,7 +87,8 @@ options:
 ## available commands
 
 ```bash
-go mod tidy
-go fmt ./...
-go test ./...
+make tidy
+make fmt
+make test
+make cov
 ```
