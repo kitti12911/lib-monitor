@@ -41,6 +41,16 @@ if err != nil {
 defer tracing.Shutdown(ctx, tp)
 ```
 
+For simple local setup, `New` uses OTLP gRPC defaults:
+
+```go
+tp, err := tracing.New(ctx, "my-service", "localhost:4317")
+if err != nil {
+    log.Fatal(err)
+}
+defer tracing.Shutdown(ctx, tp)
+```
+
 - exports traces via OTLP gRPC or HTTP (e.g. to alloy, otel collector)
 - defaults to OTLP gRPC when `Protocol` is empty
 - use `Endpoint: "localhost:4318"` and `Protocol: "http"` for OTLP HTTP
@@ -59,6 +69,20 @@ profiler, err := profiling.NewFromConfig("my-service", profiling.Config{
     ServerAddress: "http://pyroscope.observability.svc.cluster.local:4040",
     Namespace:     "demo",
 })
+if err != nil {
+    log.Fatal(err)
+}
+defer profiling.Shutdown(profiler)
+```
+
+For direct setup without a config struct:
+
+```go
+profiler, err := profiling.New(
+    "my-service",
+    "http://pyroscope.observability.svc.cluster.local:4040",
+    profiling.WithNamespace("demo"),
+)
 if err != nil {
     log.Fatal(err)
 }
