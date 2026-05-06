@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.6.0](https://github.com/kitti12911/lib-monitor/compare/v1.5.0...v1.6.0) (2026-05-06)
+
+
+### Features
+
+* add code coverage summary ([8b4799d](https://github.com/kitti12911/lib-monitor/commit/8b4799d9b2ac128e5b84d8e5a9817cf6b739a9ec))
+* add lint/security/test check ([30c8e5e](https://github.com/kitti12911/lib-monitor/commit/30c8e5e5e202c868075d963c04df90c90d8a1a0e))
+* release please will check if go ci is success or not before perform action ([#8](https://github.com/kitti12911/lib-monitor/issues/8)) ([7428fd0](https://github.com/kitti12911/lib-monitor/commit/7428fd01d2cdc13c931863e395ffe5dc1f026dfc))
+
 ## [1.5.0](https://github.com/kitti12911/lib-monitor/compare/v1.4.0...v1.5.0) (2026-05-03)
 
 
