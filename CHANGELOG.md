@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/kitti12911/lib-monitor/compare/v1.7.0...v1.8.0) (2026-05-06)
+
+
+### Features
+
+* apply 'security-toolchain' to reduce actions time ([#12](https://github.com/kitti12911/lib-monitor/issues/12)) ([1755e1f](https://github.com/kitti12911/lib-monitor/commit/1755e1f47b705a9e7ec6a146c42ec05339ea7a61))
+
 ## [1.7.0](https://github.com/kitti12911/lib-monitor/compare/v1.6.0...v1.7.0) (2026-05-06)
 
 
