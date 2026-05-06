@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/kitti12911/lib-monitor/compare/v1.6.0...v1.7.0) (2026-05-06)
+
+
+### Features
+
+* add pipeline cancellation when new pipeline in same branch detected ([#10](https://github.com/kitti12911/lib-monitor/issues/10)) ([f5cda2d](https://github.com/kitti12911/lib-monitor/commit/f5cda2d70e6690056791beaf9a8697bb3176a3bd))
+
 ## [1.6.0](https://github.com/kitti12911/lib-monitor/compare/v1.5.0...v1.6.0) (2026-05-06)
 
 
