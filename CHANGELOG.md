@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.0](https://github.com/kitti12911/lib-monitor/compare/v1.8.0...v1.9.0) (2026-05-09)
+
+
+### Features
+
+* update toolchain ([eeeeb96](https://github.com/kitti12911/lib-monitor/commit/eeeeb969ee7a469c4a64842d806c9036b7edf76f))
+
 ## [1.8.0](https://github.com/kitti12911/lib-monitor/compare/v1.7.0...v1.8.0) (2026-05-06)
 
 
