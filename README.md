@@ -45,7 +45,7 @@ GitLab-specific release config.
 
 `GO_TEST_RACE=true` or `GO_TEST_CGO=true` requires a C compiler in the selected
 toolchain image. `lib-monitor` sets `GO_TEST_RACE=false` in GitHub Actions while
-using `image-toolchain` v1.0.1 because that image does not include one.
+using `image-toolchain` v1.1.0 because that image does not include one.
 
 ## packages
 
