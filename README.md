@@ -20,6 +20,33 @@ lib-monitor/
 go get github.com/kitti12911/lib-monitor
 ```
 
+## ci commands
+
+reusable CI entrypoints live in `scripts/ci/` so GitHub Actions and GitLab CI
+can call the same commands with provider-specific orchestration around them.
+
+| command                                    | purpose                           |
+| ------------------------------------------ | --------------------------------- |
+| `./scripts/ci/go-lint.sh`                  | run `go vet` and `golangci-lint`  |
+| `./scripts/ci/go-test.sh`                  | run tests with coverage           |
+| `./scripts/ci/markdownlint.sh`             | run Markdown linting              |
+| `./scripts/ci/security-scan.sh`            | run `govulncheck` and Semgrep     |
+| `./scripts/ci/supply-chain-scan.sh`        | run Trivy and Gitleaks            |
+| `./scripts/ci/semantic-release-plan.sh`    | preview the next semantic release |
+| `./scripts/ci/semantic-release-publish.sh` | publish the semantic release      |
+
+GitHub Actions uses `TOOLCHAIN_REGISTRY` and `TOOLCHAIN_IMAGE_NAMESPACE` to
+resolve the shared toolchain images. GitLab should map its CI variables and
+image credentials to the same script inputs instead of duplicating the command
+logic.
+The current semantic-release config publishes GitHub releases; GitLab release
+publishing also needs `@semantic-release/gitlab` in the release toolchain and a
+GitLab-specific release config.
+
+`GO_TEST_RACE=true` or `GO_TEST_CGO=true` requires a C compiler in the selected
+toolchain image. `lib-monitor` sets `GO_TEST_RACE=false` in GitHub Actions while
+using `image-toolchain` v1.1.0 because that image does not include one.
+
 ## packages
 
 ### tracing
@@ -114,13 +141,20 @@ Optional:
 
 ## available commands
 
-| Command       | Description                                     |
-| ------------- | ----------------------------------------------- |
-| `make tidy`   | Run `go mod tidy`                               |
-| `make lint`   | Run Go and Markdown linting                     |
-| `make fmt`    | Format Go code with `go fmt`                    |
-| `make pretty` | Format Markdown, YAML, JSON, and JSONC          |
-| `make format` | Run Go and document/config formatting           |
-| `make test`   | Run tests with the race detector                |
-| `make cov`    | Generate and open an HTML coverage report       |
-| `make fix`    | Apply standard Go source rewrites with `go fix` |
+| Command                | Description                                     |
+| ---------------------- | ----------------------------------------------- |
+| `make tidy`            | Run `go mod tidy`                               |
+| `make lint`            | Run Go and Markdown linting                     |
+| `make ci-lint`         | Run reusable Go linting CI command              |
+| `make ci-test`         | Run reusable test CI command                    |
+| `make ci-security`     | Run reusable govulncheck and Semgrep command    |
+| `make ci-supply-chain` | Run reusable Trivy and Gitleaks command         |
+| `make ci-markdownlint` | Run reusable Markdown lint command              |
+| `make release-plan`    | Preview the next semantic release               |
+| `make release-publish` | Publish semantic release                        |
+| `make fmt`             | Format Go code with `go fmt`                    |
+| `make pretty`          | Format Markdown, YAML, JSON, and JSONC          |
+| `make format`          | Run Go and document/config formatting           |
+| `make test`            | Run tests with the race detector                |
+| `make cov`             | Generate and open an HTML coverage report       |
+| `make fix`             | Apply standard Go source rewrites with `go fix` |

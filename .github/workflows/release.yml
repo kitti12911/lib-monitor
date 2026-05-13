@@ -11,14 +11,33 @@ on:
 
 permissions:
     contents: write
+    issues: write
     pull-requests: write
 
 jobs:
     release:
         runs-on: ubuntu-latest
         if: github.event.workflow_run.conclusion == 'success'
+        container:
+            image: ${{ vars.TOOLCHAIN_REGISTRY }}/${{ vars.TOOLCHAIN_IMAGE_NAMESPACE }}/release-toolchain@sha256:aaba512b7e0bce0b866ce97ff6eb3cb27b7a58ba4cb4995c9fa64af571850193
+            credentials:
+                username: ${{ secrets.TOOLCHAIN_REGISTRY_USERNAME }}
+                password: ${{ secrets.TOOLCHAIN_REGISTRY_PASSWORD }}
         steps:
-            # googleapis/release-please-action v5.0.0
-            - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7
+            # actions/checkout v6.0.2
+            - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
               with:
-                  release-type: go
+                  ref: main
+                  fetch-depth: 0
+
+            - name: Pin tested commit
+              run: |
+                  git config --global --add safe.directory "$(pwd)"
+                  git reset --hard "${RELEASE_SHA}"
+              env:
+                  RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
+
+            - name: Publish semantic release
+              run: ./scripts/ci/semantic-release-publish.sh
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
