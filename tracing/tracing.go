@@ -34,6 +34,10 @@ func New(ctx context.Context, serviceName, collectorEndpoint string) (*sdktrace.
 	})
 }
 
+// NewFromConfig builds an OTel TracerProvider and installs it as the global
+// otel.TracerProvider plus a composite TraceContext+Baggage propagator. Intended
+// for one-time application startup; calling it twice in the same process
+// replaces the global provider and orphans references held by earlier callers.
 func NewFromConfig(ctx context.Context, serviceName string, cfg Config) (*sdktrace.TracerProvider, error) {
 	if !cfg.Enabled {
 		return nil, nil

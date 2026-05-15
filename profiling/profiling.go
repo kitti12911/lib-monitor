@@ -87,6 +87,8 @@ func WithNamespace(namespace string) Option {
 	}
 }
 
+// WithTags merges the given tags into the profiler config, overriding any
+// existing keys (including service_name set by New).
 func WithTags(tags map[string]string) Option {
 	return func(cfg *pyroscope.Config) {
 		if cfg.Tags == nil {
